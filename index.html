@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1e6fd9">
+<title>IRON SOUL</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+:root{--bg:#17151d;--card:#221f2b;--card2:#2b2736;--text:#f5f3ff;--muted:#9d97b5;--line:#34303f;--acc:#a66bff;--acc2:#7c4dff;--ok:#34d399;--blue:#7c8cff;--hero:linear-gradient(160deg,#a66bff 0%,#7c4dff 70%,#5b3bd6 100%);--shadow:0 12px 30px rgba(0,0,0,.35)}
+[data-theme="orange"]{--bg:#0b0c12;--card:#151823;--card2:#1c2030;--text:#f2f3f7;--muted:#8b90a6;--line:#262b3c;--acc:#ff5a36;--acc2:#ff2e7a;--ok:#22c55e;--blue:#3b82f6;--hero:radial-gradient(120% 140% at 0% 0%,#ff5a36 0%,transparent 55%),radial-gradient(120% 140% at 100% 100%,#ff2e7a 0%,transparent 55%),#11131c;--shadow:0 10px 30px rgba(0,0,0,.35)}
+[data-theme="winter"]{--bg:#eef6ff;--card:#ffffff;--card2:#f3f8ff;--text:#1a2a3f;--muted:#6b819e;--line:#d6e6f5;--acc:#1e6fd9;--acc2:#4aa8f0;--ok:#10b981;--blue:#1e6fd9;--hero:linear-gradient(160deg,#1e6fd9 0%,#4aa8f0 60%,#9fd8ff 100%);--shadow:0 2px 10px rgba(20,20,60,.06)}
+[data-theme="light"]{--bg:#f4f5f9;--card:#ffffff;--card2:#f1f3f8;--text:#14161f;--muted:#6b7089;--line:#e3e6ef;--acc:#7c4dff;--acc2:#a66bff;--ok:#10b981;--blue:#3b82f6;--hero:linear-gradient(135deg,#7c4dff,#a66bff);--shadow:0 10px 30px rgba(20,22,40,.08)}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.45 -apple-system,system-ui,"Inter",sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;padding-bottom:env(safe-area-inset-bottom,0px)}
+.hero{position:relative;overflow:hidden;background:var(--hero);color:#fff;padding:calc(env(safe-area-inset-top,0px) + 20px) 18px 24px;border-radius:0 0 28px 28px;box-shadow:0 18px 36px rgba(124,77,255,.25)}
+.hero h1{margin:0;font-size:26px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+.hero p{margin:4px 0 0;opacity:.85;font-size:13px}
+.hr{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.tabs{display:flex;background:rgba(0,0,0,.22);border-radius:16px;padding:4px;margin-top:16px}
+.tab{flex:1;padding:10px;background:none;color:#fff;opacity:.7;border-radius:12px;border:0;font-weight:700}
+.tab.on{background:#fff;color:#1a1530;opacity:1}
+.lo{background:rgba(255,255,255,.2)!important;padding:5px 12px!important;font-size:12px!important;border-radius:999px!important}
+main{max-width:620px;margin:16px auto 0;padding:0 14px 110px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:14px}
+.stats .card{margin:0;padding:16px}
+.tn{font-size:30px;font-weight:900;background:linear-gradient(135deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.02em}
+.tl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+h3{margin:26px 4px 10px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+.client{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.av{width:48px;height:48px;flex:none;border-radius:16px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:grid;place-items:center;font-weight:800;font-size:16px}
+.cinfo{flex:1;min-width:0}
+.cinfo>b{font-size:16px}
+.pbar{height:8px;background:var(--card2);border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.pfill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px}
+.small{font-size:13px}.muted{color:var(--muted)}.ok{color:var(--ok);font-weight:800}
+.wnav{display:flex;align-items:center;justify-content:space-between;margin:0 4px 10px;font-weight:800}
+.wnav button{background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:none;width:44px;padding:8px 0;font-size:18px}
+.week{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 16px;box-shadow:var(--shadow)}
+.day{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.day:last-child{border-bottom:0}
+.dn{width:56px;flex:none;display:flex;flex-direction:column}
+.dn b{font-size:16px;font-weight:800}.dn span{font-size:12px;color:var(--muted)}
+.day.today .dn b,.day.today .dn span{color:var(--acc)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;flex:1;align-items:center}
+.chip{border:1px solid var(--line);border-radius:14px;padding:7px 12px;font-size:13px;font-weight:700;display:flex;flex-direction:column;align-items:flex-start;cursor:pointer;color:var(--text);background:var(--card2);box-shadow:none}
+.chip small{font-size:11px;font-weight:500;opacity:.8;margin-top:1px}
+.chip.booked{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip.mine{background:var(--acc);border-color:var(--acc);color:#fff}
+.chip.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.empty{font-size:13px;color:var(--muted)}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
+.brow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.brow:last-child{border-bottom:0}
+input,select,textarea{font:inherit;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card2);color:var(--text);min-width:0;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--acc)}
+button{font:inherit;padding:11px 16px;border-radius:14px;border:0;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;cursor:pointer;font-weight:700;box-shadow:0 6px 16px rgba(124,77,255,.25);transition:transform .08s}
+button:active{transform:scale(.97)}
+button.del{background:#ef4444;box-shadow:none}
+button.alt{background:var(--card2);color:var(--text);border:1px solid var(--line);box-shadow:none}
+button.ghost{background:none;color:var(--muted);padding:6px 10px;font-weight:700;box-shadow:none}
+.addrow{display:flex;gap:10px;flex-wrap:wrap}.addrow input{flex:1;min-width:120px}
+.row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}.row select{flex:1}
+.fw{width:100%;margin-top:10px}
+.opt{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;padding:12px 14px;margin-top:10px;background:var(--card2)}
+.opt.click{cursor:pointer}.opt.mine{border-color:var(--acc)}
+.pbg{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,rgba(166,107,255,.28),rgba(124,77,255,.10))}
+[data-theme="orange"] .pbg{background:linear-gradient(90deg,rgba(255,90,54,.28),rgba(255,46,122,.12))}
+[data-theme="winter"] .pbg{background:rgba(74,168,240,.2)}
+.otxt{position:relative;display:flex;justify-content:space-between;gap:10px;font-weight:600}.otxt b{color:var(--acc)}
+.voters{position:relative;font-size:12px;color:var(--muted);margin-top:6px}
+.pq{font-weight:800;font-size:17px;margin-bottom:4px}
+.seg{display:flex;gap:6px;background:var(--card2);border-radius:14px;padding:4px}
+.seg button{flex:1;background:none;color:var(--muted);box-shadow:none}
+.seg button.on{background:var(--card);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.chatbtn{position:fixed;right:18px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);width:58px;height:58px;border-radius:50%;padding:0;font-size:24px;z-index:40;display:none;align-items:center;justify-content:center;box-shadow:0 12px 28px rgba(124,77,255,.45)}
+#chat{position:fixed;top:0;right:0;bottom:0;width:min(360px,100%);background:var(--card);border-left:1px solid var(--line);box-shadow:-12px 0 30px rgba(0,0,0,.3);transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);z-index:55;display:flex;flex-direction:column}
+#chat.open{transform:translateX(0)}
+.chh{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--line);font-weight:800}
+#chatlist{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;align-self:flex-start;background:var(--card2);border-radius:16px 16px 16px 4px;padding:9px 12px;font-size:14px}
+.msg.me{align-self:flex-end;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-radius:16px 16px 4px 16px}
+.msg small{display:block;opacity:.7;font-size:11px;margin-bottom:2px}
+.chf{display:flex;gap:10px;padding:12px;border-top:1px solid var(--line)}.chf input{flex:1}
+.banner{position:fixed;left:14px;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 20px 40px rgba(0,0,0,.35);z-index:60;max-width:520px;margin:auto}
+#toast{position:fixed;left:14px;right:14px;top:calc(env(safe-area-inset-top,0px) + 14px);display:flex;flex-direction:column;gap:10px;z-index:80;max-width:520px;margin:auto;pointer-events:none}
+.tst{background:#1f1c29;color:#f5f3ff;border:1px solid #3a3550;border-radius:16px;padding:13px 15px;box-shadow:0 14px 30px rgba(0,0,0,.4);animation:tin .3s ease}
+@keyframes tin{from{transform:translateY(-12px);opacity:0}}
+.dotbtn{width:46px;height:46px;border-radius:16px;padding:0;background:rgba(255,255,255,.18);font-size:24px;line-height:1;flex:none;box-shadow:none}
+#menu{position:fixed;top:calc(env(safe-area-inset-top,0px) + 74px);right:14px;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.4);padding:8px;z-index:70;min-width:260px;display:none}
+#menu.open{display:block}
+#menu button{display:block;width:100%;text-align:left;background:none;color:var(--text);padding:11px 14px;font-weight:600;border-radius:12px;box-shadow:none}
+#menu button:active{background:var(--card2)}
+#menu .mh{font-size:11px;color:var(--muted);padding:10px 14px 4px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+.chk{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:none;color:transparent;padding:0;box-shadow:none;flex:none;font-weight:900;font-size:14px}
+.chk.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.imp{display:inline-block;font-size:10px;background:var(--acc);color:#fff;border-radius:8px;padding:2px 7px;margin-left:6px;font-weight:800;vertical-align:middle;text-transform:uppercase;letter-spacing:.05em}
+.bnav{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);background:var(--card2);border:1px solid var(--line);border-radius:24px;display:none;justify-content:space-around;padding:8px 6px;z-index:48;box-shadow:0 14px 30px rgba(0,0,0,.45);max-width:600px;margin:auto}
+.bnav button{flex:1;background:none;color:var(--muted);box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:6px 2px}
+.bnav button span{font-size:20px;line-height:1}
+.bnav button.on{color:var(--text)}
+.bnav button.on span{background:linear-gradient(135deg,var(--acc),var(--acc2));border-radius:14px;padding:6px 14px}
+.foot{margin:30px 0 0;text-align:center}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;text-align:left;margin-bottom:12px;box-shadow:var(--shadow)}
+.fk{font-size:11px;color:var(--acc);font-weight:800;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
+.contacts{display:flex;flex-direction:column;gap:10px}
+.contacts a{display:block;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;padding:14px;border-radius:16px;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(124,77,255,.25)}
+.ct{font-weight:800;margin-bottom:2px;font-size:16px}
+.brand{font-size:12px;color:var(--muted);margin-top:14px;letter-spacing:.2em;text-transform:uppercase;font-weight:800}
+[data-theme="purple"] .bnav{display:flex}
+[data-theme="purple"] .tabs{display:none!important}
+[data-theme="purple"] .chatbtn{display:none!important}
+main{padding-bottom:120px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hr">
+    <div><h1>IRON SOUL</h1><p id="sub">Загрузка…</p></div>
+    <button class="dotbtn" onclick="toggleMenu()" aria-label="Меню">⋮</button>
+  </div>
+  <p id="mode" style="margin-top:6px"></p>
+  <div class="tabs" id="tabs" style="display:none">
+    <button class="tab" data-v="trainer" onclick="setView('trainer')">Тренер</button>
+    <button class="tab" data-v="base" onclick="setView('base')">База</button>
+    <button class="tab" data-v="client" onclick="setView('client')">Клиент</button>
+  </div>
+</div>
+<main id="app"><div class="card muted">Загрузка…</div></main>
+<button class="chatbtn" id="chatbtn" onclick="toggleChat()" aria-label="Чат">💬</button>
+<aside id="chat">
+  <div class="chh"><b>💬 Чат студии</b><button class="ghost" onclick="toggleChat()">✕</button></div>
+  <div id="chatlist"></div>
+  <form class="chf" onsubmit="event.preventDefault();sendChat()"><input id="chatin" placeholder="Сообщение" autocomplete="off"><button>➤</button></form>
+</aside>
+<div id="banner"></div>
+<div id="menu">
+  <div class="mh">Тема</div>
+  <button onclick="setTheme('purple')">💜 Фиолетовая (новая)</button>
+  <button onclick="setTheme('orange')">🔥 Оранжевая тёмная</button>
+  <button onclick="setTheme('winter')">❄️ Зимняя (старая)</button>
+  <button onclick="setTheme('light')">☀️ Светлая</button>
+  <div class="mh">Уведомления</div>
+  <button id="mNotify" onclick="toggleNotify()">🔔 Уведомления</button>
+  <button onclick="askNotify()">🛎 Разрешить в браузере</button>
+  <div class="mh">Аккаунт</div>
+  <button onclick="logout()">🚪 Выйти</button>
+</div>
+<nav class="bnav" id="bnav"></nav>
+<div id="toast"></div>
+
+<script>
+const API='https://bvxnqtgjgxihsioicqiq.supabase.co/functions/v1/api';
+const TG_BOT='Trenirovatsyaporabot';
+const $=id=>document.getElementById(id);
+const PLANS=[4,6,8,10,12];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const iso=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const dm=d=>`${pad(d.getDate())}.${pad(d.getMonth()+1)}`;
+const fmt=(d,t)=>{const [y,m,dd]=d.split('-');return `${dd}.${m}.${y} ${t}`;};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const initials=n=>n.split(' ').map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+const EMPTY=()=>({clients:[],slots:[],bookings:[],polls:[]});
+const norm=d=>Object.assign(EMPTY(),d||{});
+const clone=x=>JSON.parse(JSON.stringify(x));
+const slotsSorted=()=>[...db.slots].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+const bookedCount=sid=>db.bookings.filter(b=>b.subId===sid&&b.status==='booked').length;
+const leftOf=s=>s.total-s.used;
+const freeOf=s=>s.total-s.used-bookedCount(s.id);
+const getC=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
+const setC=(k,v)=>{try{localStorage.setItem(k,v);}catch(e){}};
+
+let db=EMPTY(), me=null, token=getC('st_token'), trainerExists=false;
+let view='client', currentClient=null, weekOffset=0, selSlot=null, authMode='login';
+let dirty=false, saving=false, chatMsgs=[], lastSnap='';
+
+// ---------- связь с сервером ----------
+async function api(action,body={}){
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json','apikey':'sb_publishable_KevvpS9B278CkKcc1V8m8g_a3BQz8tY',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify({action,...body})});
+  const j=await r.json().catch(()=>({error:'нет ответа от сервера'}));
+  if(r.status===401&&token&&action!=='login'){ logoutLocal(); throw new Error('Сессия истекла, войдите снова'); }
+  if(!r.ok) throw new Error(j.error||('ошибка '+r.status));
+  return j;
+}
+function save(){ dirty=true; flush(); }
+async function flush(){
+  if(saving||!dirty||!me) return;
+  saving=true; dirty=false;
+  try{ await api('save',{state:db}); }
+  catch(e){ dirty=true; console.warn(e); saving=false; setTimeout(flush,4000); return; }
+  saving=false;
+  if(dirty) flush();
+}
+
+// ---------- вход и регистрация ----------
+function setAuth(m){ authMode=m; render(); }
+async function doAuth(){
+  const login=$('a-login').value.trim().toLowerCase(), pass=$('a-pass').value;
+  try{
+    if(authMode==='login'){ return await startSession(await api('login',{login,pass})); }
+    const name=$('a-name').value.trim(), role=$('a-role').value;
+    await startSession(await api('register',{login,pass,name,role,profile:{phone:$('a-phone')?.value.trim()||'',height:$('a-h')?.value||'',weight:$('a-w')?.value||'',birth:$('a-birth')?.value||''}}));
+  }catch(e){
+    const d=$('diag'); if(d) d.textContent='Ошибка: '+e.message;
+    alert(e.message);
+  }
+}
+async function startSession(r){
+  token=r.token; me=r.me;
+  if(getC('st_cookie')==='yes') setC('st_token',token);
+  view=me.role==='trainer'?'trainer':'client';
+  currentClient=me.clientId;
+  const s=await api('state');
+  me=s.me; db=norm(s.state); lastSnap=JSON.stringify([s.me,s.state]);
+  render();
+}
+async function logout(){ try{ await api('logout'); }catch(e){} logoutLocal(); }
+function logoutLocal(){ token=null; me=null; try{localStorage.removeItem('st_token');}catch(e){} render(); }
+
+// ---------- действия ----------
+function setView(v){ view=v; render(); }
+function selectSlot(id){ selSlot=(selSlot===id)?null:id; render(); }
+function shiftWeek(n){ weekOffset+=n; render(); }
+function weekDays(){
+  const n=new Date(); n.setHours(0,0,0,0);
+  n.setDate(n.getDate()-((n.getDay()+6)%7)+weekOffset*7);
+  return [...Array(7)].map((_,i)=>{const d=new Date(n); d.setDate(n.getDate()+i); return d;});
+}
+function addClient(){ const n=$('cname').value.trim(); if(!n) return; db.clients.push({id:uid(),name:n,subs:[],phone:$('cphone').value.trim()}); save(); render(); }
+function sell(cid){ const total=+$('plan-'+cid).value; const expires=$('exp-'+cid).value; db.clients.find(c=>c.id===cid).subs.push({id:uid(),total,used:0,expires}); save(); render(); }
+function addSlot(){ const d=$('sdate').value,t=$('stime').value; if(!d||!t) return alert('Укажите дату и время'); db.slots.push({id:uid(),date:d,time:t}); save(); render(); }
+function book(slotId,cid){
+  if(!cid) return alert('Выберите клиента');
+  if(db.bookings.some(b=>b.slotId===slotId&&b.clientId===cid&&b.status!=='cancelled')) return alert('Уже записан');
+  const c=db.clients.find(x=>x.id===cid); const sub=c.subs.find(s=>freeOf(s)>0);
+  if(!sub) return alert('Нет свободных занятий в абонементе');
+  db.bookings.push({id:uid(),slotId,clientId:cid,subId:sub.id,status:'booked',ts:Date.now()}); save(); render();
+}
+function attend(bid){
+  const b=db.bookings.find(x=>x.id===bid);
+  const sub=db.clients.find(c=>c.id===b.clientId).subs.find(s=>s.id===b.subId);
+  b.status='attended'; b.ts=Date.now(); sub.used++; save(); render();
+}
+function cancel(bid){ const b=db.bookings.find(x=>x.id===bid); b.status='cancelled'; b.ts=Date.now(); save(); render(); }
+function addPoll(){
+  const q=$('pq').value.trim(), opts=$('po').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!q||opts.length<2) return alert('Нужен вопрос и минимум 2 варианта');
+  db.polls.unshift({id:uid(),question:q,options:opts.map(t=>({id:uid(),text:t,voters:[]}))}); save(); render();
+}
+function vote(pid,oid,cid){
+  const p=db.polls.find(x=>x.id===pid); const was=p.options.find(o=>o.id===oid).voters.includes(cid);
+  p.options.forEach(o=>o.voters=o.voters.filter(v=>v!==cid));
+  if(!was) p.options.find(o=>o.id===oid).voters.push(cid);
+  save(); render();
+}
+function delPoll(pid){ db.polls.find(p=>p.id===pid).deleted=true; save(); render(); }
+
+// ---------- Telegram ----------
+async function linkTg(){
+  try{
+    const r=await api('link');
+    window.open(`https://t.me/${TG_BOT}?start=${r.code}`,'_blank');
+    toast('Telegram','Нажмите «Старт» в боте, он пришлёт подтверждение');
+  }catch(e){ alert(e.message); }
+}
+function tgCard(){
+  if(me&&me.tg) return '';
+  return `<div class="card"><div class="dh"><b>📲 Уведомления в Telegram</b></div>
+    <div class="small muted">Новые записи, отмены и отметки придут в Telegram.</div>
+    <div class="row"><button onclick="linkTg()" style="flex:1">Привязать Telegram</button></div></div>`;
+}
+
+// ---------- лента и уведомления ----------
+function feedItems(){
+  const items=[];
+  for(const b of db.bookings){
+    if(!b.ts) continue;
+    if(me.role==='client'&&b.clientId!==me.clientId) continue;
+    const c=db.clients.find(x=>x.id===b.clientId), s=db.slots.find(x=>x.id===b.slotId);
+    const lab=s?fmt(s.date,s.time):'занятие', who=c?c.name:'Клиент';
+    let t=null;
+    if(b.status==='booked') t=['Новая запись',`${who} · ${lab}`];
+    if(b.status==='cancelled') t=['Запись отменена',`${who} · ${lab}`];
+    if(b.status==='attended') t=['Занятие отмечено',`${who} · ${lab} · списано 1 занятие`];
+    if(t) items.push({ts:b.ts,title:t[0],body:t[1],imp:b.status!=='booked'||me.role==='trainer'});
+  }
+  const cl=+(getC('st_cleared')||0); return items.filter(i=>i.ts>cl).sort((a,b)=>b.ts-a.ts).slice(0,20);
+}
+function ackList(){ try{ return JSON.parse(getC('st_ack')||'[]'); }catch(e){ return []; } }
+function ackItem(ts){ const a=ackList(); const i=a.indexOf(ts); if(i>=0) a.splice(i,1); else a.push(ts); setC('st_ack',JSON.stringify(a.slice(-200))); render(); }
+function feedHTML(){
+  const seen=+(getC('st_seen')||0), items=feedItems(), acked=ackList();
+  const unread=items.filter(i=>i.ts>seen&&!acked.includes(i.ts)).length;
+  const list=items.length?items.map(i=>`<div class="brow"><button class="chk ${acked.includes(i.ts)?'on':''}" onclick="ackItem(${i.ts})" aria-label="Отметить">✓</button><div style="flex:1;min-width:0"><b>${esc(i.title)}</b>${i.imp?'<span class="imp">важно</span>':''}<div class="small muted">${esc(i.body)}</div></div><span class="small muted">${new Date(i.ts).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</span></div>`).join(''):'<div class="muted small">Пока нет уведомлений</div>';
+  return `<div class="card"><div class="dh"><b>🔔 Уведомления${unread?` · <span class="ok">${unread} новых</span>`:''}</b><div>${unread?'<button class="ghost" onclick="markSeen()">Прочитано</button>':''}${items.length?'<button class="ghost" onclick="clearFeed()">Очистить</button>':''}</div></div>${list}</div>`;
+}
+function markSeen(){ setC('st_seen',String(Date.now())); render(); }
+function clearFeed(){ setC('st_cleared',String(Date.now())); setC('st_seen',String(Date.now())); render(); }
+function toast(t,b){
+  const el=document.createElement('div'); el.className='tst';
+  el.innerHTML=`<b>${esc(t)}</b>${b?'<div class="small">'+esc(b)+'</div>':''}`;
+  $('toast').appendChild(el); setTimeout(()=>el.remove(),6000);
+}
+function notifyChanges(prev,next){
+  if(!me) return;
+  for(const b of next.bookings){
+    const old=prev.bookings.find(x=>x.id===b.id);
+    if(me.role==='client'&&b.clientId!==me.clientId) continue;
+    const c=next.clients.find(x=>x.id===b.clientId), s=next.slots.find(x=>x.id===b.slotId);
+    const lab=s?fmt(s.date,s.time):'занятие', who=c?c.name:'Клиент';
+    if(!old&&b.status==='booked') toast(me.role==='trainer'?'Новая запись':'Вы записаны', me.role==='trainer'?`${who} · ${lab}`:lab);
+    else if(old&&old.status!==b.status&&b.status==='cancelled') toast('Запись отменена',`${who} · ${lab}`);
+    else if(old&&old.status!==b.status&&b.status==='attended') toast('Занятие отмечено',`${lab} · списано 1 занятие`);
+  }
+}
+
+// ---------- чат ----------
+async function loadChat(){
+  try{ chatMsgs=(await api('chat')).messages; renderChat(); }catch(e){}
+}
+function renderChat(){
+  const l=$('chatlist'); if(!l) return;
+  l.innerHTML=chatMsgs.length?chatMsgs.map(m=>`<div class="msg ${me&&m.login===me.login?'me':''}"><small>${esc(m.name)} · ${new Date(m.ts).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})}</small>${esc(m.text)}</div>`).join(''):'<div class="muted small">Сообщений пока нет</div>';
+  l.scrollTop=l.scrollHeight;
+}
+function toggleChat(){ if(!me) return; $('chat').classList.toggle('open'); loadChat(); }
+async function sendChat(){
+  const inp=$('chatin'), text=inp.value.trim(); if(!text) return;
+  inp.value='';
+  try{ await api('chatSend',{text}); await loadChat(); }catch(e){ inp.value=text; alert(e.message); }
+}
+
+// ---------- отрисовка ----------
+function subBar(s){
+  const pct=s.total?Math.round(s.used/s.total*100):0;
+  return `<div class="pbar"><div class="pfill" style="width:${pct}%"></div></div><div class="small muted">Абонемент ${s.total}: посещено ${s.used}, осталось <b>${leftOf(s)}</b>, свободно ${freeOf(s)}${s.expires?`, до ${fmt2(s.expires)}`:''}</div>`;
+}
+function tile(n,l){ return `<div class="card" style="margin:0"><div class="tn">${n}</div><div class="tl">${l}</div></div>`; }
+function weekNav(){ const d=weekDays(); return `<div class="wnav"><button class="alt" onclick="shiftWeek(-1)">‹</button><span>${dm(d[0])} — ${dm(d[6])}</span><button class="alt" onclick="shiftWeek(1)">›</button></div>`; }
+function chip(s,mode){
+  if(mode==='trainer'){ const n=db.bookings.filter(b=>b.slotId===s.id&&b.status!=='cancelled').length; return `<button class="chip ${n?'booked':'free'}" onclick="selectSlot('${s.id}')">${s.time}<small>${n?n+' зап.':'свободно'}</small></button>`; }
+  const b=db.bookings.find(x=>x.slotId===s.id&&x.clientId===currentClient&&x.status!=='cancelled');
+  if(b&&b.status==='attended') return `<button class="chip done" onclick="selectSlot('${s.id}')">${s.time}<small>✓ был</small></button>`;
+  if(b) return `<button class="chip mine" onclick="selectSlot('${s.id}')">${s.time}<small>вы записаны</small></button>`;
+  return `<button class="chip free" onclick="selectSlot('${s.id}')">${s.time}<small>свободно</small></button>`;
+}
+function weekHTML(mode){
+  const days=weekDays(), today=iso(new Date()), names=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  return `<div class="week">${days.map((d,i)=>{
+    const key=iso(d), chips=slotsSorted().filter(s=>s.date===key).map(s=>chip(s,mode)).join('')||'<span class="empty">нет занятий</span>';
+    return `<div class="day ${key===today?'today':''}"><div class="dn"><b>${names[i]}</b><span>${dm(d)}</span></div><div class="chips">${chips}</div></div>`;
+  }).join('')}</div>`;
+}
+function clientSlotAction(s){
+  const c=db.clients.find(x=>x.id===currentClient);
+  const b=db.bookings.find(x=>x.slotId===s.id&&x.clientId===c.id&&x.status!=='cancelled');
+  if(!b) return c.subs.some(x=>freeOf(x)>0)?`<button onclick="book('${s.id}','${c.id}')">Записаться</button>`:'<span class="muted small">Нет свободных занятий</span>';
+  if(b.status==='attended') return '<span class="ok">✓ Занятие отмечено</span>';
+  return `<span class="ok">Вы записаны</span> <button class="del" onclick="cancel('${b.id}')">Отменить</button>`;
+}
+function detailHTML(mode){
+  const s=db.slots.find(x=>x.id===selSlot); if(!s) return '';
+  const head=`<div class="dh"><b>${fmt(s.date,s.time)}</b><button class="ghost" onclick="selectSlot(null)">✕</button></div>`;
+  if(mode==='client') return `<div class="card">${head}${clientSlotAction(s)}</div>`;
+  const list=db.bookings.filter(b=>b.slotId===s.id&&b.status!=='cancelled').map(b=>{
+    const c=db.clients.find(x=>x.id===b.clientId);
+    const act=b.status==='attended'?'<span class="ok">✓ был</span>':`<span><button onclick="attend('${b.id}')">Отметить</button> <button class="del" onclick="cancel('${b.id}')">✕</button></span>`;
+    return `<div class="brow"><span>${esc(c?c.name:'—')}</span>${act}</div>`;
+  }).join('')||'<div class="muted small">Записей нет</div>';
+  return `<div class="card">${head}${list}<div class="row"><select id="bc"><option value="">— выбрать клиента —</option>${db.clients.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select><button onclick="book('${s.id}',$('bc').value)">Записать</button></div></div>`;
+}
+function pollHTML(mode){
+  const polls=db.polls.filter(p=>!p.deleted);
+  if(!polls.length) return '';
+  return '<h3>Опросы</h3>'+polls.map(p=>{
+    const total=new Set(p.options.flatMap(o=>o.voters)).size;
+    const opts=p.options.map(o=>{
+      const pct=total?Math.round(o.voters.length/total*100):0, mine=currentClient&&o.voters.includes(currentClient);
+      const names=o.voters.map(v=>{const c=db.clients.find(x=>x.id===v);return c?esc(c.name):'';}).join(', ');
+      const click=mode==='client'?`onclick="vote('${p.id}','${o.id}','${currentClient}')"`:'';
+      return `<div class="opt ${mode==='client'?'click':''} ${mine?'mine':''}" ${click}><div class="pbg" style="width:${pct}%"></div><div class="otxt"><span>${mine?'✓ ':''}${esc(o.text)}</span><b>${o.voters.length} · ${pct}%</b></div>${mode==='trainer'&&names?`<div class="voters">${names}</div>`:''}</div>`;
+    }).join('');
+    return `<div class="card"><div class="pq"><b>📊 ${esc(p.question)}</b></div><div class="small muted">Голосов: ${total}</div>${opts}${mode==='trainer'?`<div class="row"><button class="del" onclick="delPoll('${p.id}')">Удалить опрос</button></div>`:''}</div>`;
+  }).join('');
+}
+function trainerHTML(){
+  const left=db.clients.reduce((a,c)=>a+c.subs.reduce((x,s)=>x+leftOf(s),0),0);
+  const att=db.bookings.filter(b=>b.status==='attended').length, up=db.bookings.filter(b=>b.status==='booked').length;
+  const clients=db.clients.map(c=>`<div class="client"><div class="av">${esc(initials(c.name))}</div><div class="cinfo"><b>${esc(c.name)}</b>${c.subs.map(subBar).join('')||'<div class="small muted">Абонементов нет</div>'}<div class="row"><select id="plan-${c.id}">${PLANS.map(p=>`<option value="${p}">${p} занятий</option>`).join('')}</select><input type="date" id="exp-${c.id}" value="" title="Дата окончания (необязательно)"><button onclick="sell('${c.id}')">Продать</button></div></div></div>`).join('')||'<div class="card muted">Клиентов пока нет</div>';
+  return `${tgCard()}${feedHTML()}
+    <div class="stats">${tile(db.clients.length,'клиентов')}${tile(left,'занятий осталось')}${tile(att,'проведено')}${tile(up,'записей впереди')}</div>
+    <div class="card"><div class="addrow"><input id="cname" placeholder="Имя нового клиента"><input id="cphone" placeholder="Телефон" type="tel"><button onclick="addClient()">+ Клиент</button></div></div>
+    <h3>Клиенты</h3>${clients}
+    <h3>Расписание</h3>
+    <div class="card"><div class="addrow"><input type="date" id="sdate"><input type="time" id="stime"><button onclick="addSlot()">+ Время</button></div></div>
+    ${weekNav()}${weekHTML('trainer')}${detailHTML('trainer')}
+    <h3>Новый опрос</h3>
+    <div class="card"><input id="pq" placeholder="Вопрос, например: Когда удобно?" class="fw"><textarea id="po" rows="3" placeholder="Каждый вариант с новой строки" class="fw"></textarea><div class="row"><button onclick="addPoll()" style="flex:1">Создать опрос</button></div></div>
+    ${pollHTML('trainer')}`;
+}
+function clientHTML(){
+  if(me.role==='client') currentClient=me.clientId;
+  else if(!db.clients.find(c=>c.id===currentClient)) currentClient=db.clients[0]?db.clients[0].id:null;
+  const c=db.clients.find(x=>x.id===currentClient);
+  if(!c) return `${tgCard()}<div class="card muted">Профиль клиента пока не найден. Тренер ещё не добавил клиентов</div>`;
+  const picker=me.role==='trainer'?`<select onchange="currentClient=this.value;selSlot=null;render()" class="fw">${db.clients.map(x=>`<option value="${x.id}" ${x.id===c.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`:`<b>${esc(c.name)}</b>`;
+  return `${tgCard()}${feedHTML()}
+    <div class="card">${picker}${profileLine(c)}<div style="margin-top:12px">${c.subs.map(subBar).join('')||'<div class="small muted">Абонемента нет</div>'}</div></div>
+    <h3>Расписание</h3>${weekNav()}${weekHTML('client')}${detailHTML('client')}${pollHTML('client')}`;
+}
+function authHTML(){
+  const reg=authMode==='register';
+  return `<div class="card auth">
+    <div class="seg"><button class="${!reg?'on':''}" onclick="setAuth('login')">Вход</button><button class="${reg?'on':''}" onclick="setAuth('register')">Регистрация</button></div>
+    ${reg?'<input id="a-name" placeholder="Ваше имя" class="fw">':''}
+    <input id="a-login" placeholder="Логин" autocomplete="username" class="fw">
+    <input id="a-pass" type="password" placeholder="Пароль (от 4 символов)" autocomplete="${reg?'new-password':'current-password'}" class="fw">
+    ${reg?`<select id="a-role" class="fw"><option value="client">Я клиент</option><option value="trainer" ${trainerExists?'disabled':''}>Я тренер${trainerExists?' (уже зарегистрирован)':''}</option></select>`:''}
+    ${reg?`<input id="a-phone" placeholder="Телефон" type="tel" class="fw"><div class="row"><input id="a-h" placeholder="Рост, см" type="number" inputmode="numeric"><input id="a-w" placeholder="Вес, кг" type="number" inputmode="numeric"></div><div class="small muted" style="margin-top:10px">Дата рождения</div><input id="a-birth" type="date" class="fw">`:''}
+    <button onclick="doAuth()" class="fw" style="margin-top:14px">${reg?'Создать аккаунт':'Войти'}</button>
+    <div class="small muted" style="margin-top:10px"><span id="diag" style="color:#dc2626"></span></div>
+  </div>`;
+}
+function renderBanner(){
+  const el=$('banner'); if(!el) return;
+  const need=getC('st_cookie')===null;
+  if(!need||!me){ el.innerHTML=''; return; }
+  el.innerHTML=`<div class="banner"><b>🍪 Запомнить вход?</b><div class="small muted">Не придётся входить каждый раз на этом устройстве.</div>
+    <div class="row"><button onclick="cookieChoice(true)">Разрешить</button><button class="alt" onclick="cookieChoice(false)">Не разрешать</button></div></div>`;
+}
+function cookieChoice(yes){ setC('st_cookie',yes?'yes':'no'); if(yes&&token) setC('st_token',token); renderBanner(); }
+function render(){
+  const tabs=$('tabs'), sub=$('sub');
+  $('chatbtn').style.display=me?'flex':'none';
+  if(!me){
+    tabs.style.display='none'; sub.textContent='Вход в систему';
+    $('mode').textContent='';
+    $('app').innerHTML=authHTML(); renderBanner(); return;
+  }
+  if(me.role!=='trainer') view='client';
+  tabs.style.display='flex';
+  document.querySelectorAll('.tab').forEach(t=>{ t.style.display=(me.role==='trainer'||t.dataset.v==='client')?'':'none'; t.classList.toggle('on',t.dataset.v===view); });
+  sub.innerHTML=`${esc(me.name)} · <button class="lo" onclick="logout()">Выйти</button>`;
+  $('mode').textContent='☁️ Данные сохраняются на сервере';
+  $('app').innerHTML=view==='trainer'?trainerHTML():view==='base'?baseHTML():clientHTML();
+  renderBanner();
+}
+
+// ---------- фоновое обновление ----------
+async function refresh(){
+  if(!me||dirty||saving) return;
+  try{
+    const s=await api('state'); const txt=JSON.stringify([s.me,s.state]);
+    if(txt===lastSnap) return;
+    const next=norm(s.state);
+    notifyChanges(db,next);
+    db=next; me=s.me; lastSnap=txt; render();
+  }catch(e){}
+}
+function startTimers(){
+  setInterval(refresh,6000);
+  setInterval(()=>{ if(me&&$('chat').classList.contains('open')) loadChat(); },4000);
+}
+
+// ---------- тема и меню ----------
+function applyTheme(){
+  const t=getC('st_theme')||'purple';
+  document.documentElement.setAttribute('data-theme',t);
+}
+function setTheme(t){ setC('st_theme',t); applyTheme(); toggleMenu(false); }
+function toggleMenu(force){
+  const m=$('menu');
+  const open=typeof force==='boolean'?force:!m.classList.contains('open');
+  m.classList.toggle('open',open);
+  const b=$('mNotify');
+  if(b) b.textContent='🔔 Уведомления: '+(me&&me.notify===false?'выкл':'вкл');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#menu')&&!e.target.closest('.dotbtn')) $('menu').classList.remove('open');
+});
+async function toggleNotify(){
+  if(!me) return toggleMenu(false);
+  const on=me.notify===false;
+  try{
+    await api('setNotify',{on});
+    me.notify=on;
+    toggleMenu(false);
+    toast(on?'Уведомления включены':'Уведомления выключены', on?'Сообщения придут в Telegram':'Сообщения в Telegram отключены');
+  }catch(e){ alert(e.message); }
+}
+
+// ---------- возраст и база клиентов ----------
+function plural(n,f){ const a=n%100,b=n%10; if(a>10&&a<20) return f[2]; if(b===1) return f[0]; if(b>=2&&b<=4) return f[1]; return f[2]; }
+function ageParts(birth){
+  const b=new Date(birth+'T00:00:00'), n=new Date(); n.setHours(0,0,0,0);
+  let y=n.getFullYear()-b.getFullYear(), m=n.getMonth()-b.getMonth();
+  if(n.getDate()<b.getDate()) m--;
+  if(m<0){ y--; m+=12; }
+  return {y,m};
+}
+function ageText(birth){
+  const {y,m}=ageParts(birth);
+  return `${y} ${plural(y,['год','года','лет'])}${m?` ${m} ${plural(m,['месяц','месяца','месяцев'])}`:''}`;
+}
+function fmt2(d){ const [y,m,dd]=d.split('-'); return `${dd}.${m}.${y}`; }
+function plus30(){ const d=new Date(); d.setDate(d.getDate()+30); return iso(d); }
+function profileLine(c){
+  if(!c.birth&&!c.height&&!c.weight) return '';
+  return `<div class="small muted" style="margin-top:6px">${c.birth?`Возраст: <b>${ageText(c.birth)}</b>`:''}${c.height?` · рост ${c.height} см`:''}${c.weight?` · вес ${c.weight} кг`:''}</div>`;
+}
+function baseList(q){
+  const dq=q.replace(/\D/g,'');
+  const list=db.clients.filter(c=>!q||c.name.toLowerCase().includes(q)||(dq&&(c.phone||'').replace(/\D/g,'').includes(dq)));
+  return list.map(c=>`<div class="client"><div class="av">${esc(initials(c.name))}</div><div class="cinfo"><b>${esc(c.name)}</b>
+    <div class="small">📞 ${c.phone?`<a href="tel:${esc(c.phone)}" style="color:inherit">${esc(c.phone)}</a>`:'телефон не указан'}</div>
+    <div class="small muted">${c.birth?ageText(c.birth)+' · ':''}${c.height?c.height+' см':''}${c.weight?' · '+c.weight+' кг':''}</div>
+    ${c.subs.map(s=>`<div class="small">Абонемент ${s.total}: осталось <b>${leftOf(s)}</b>${s.expires?`, до ${fmt2(s.expires)}`:''}</div>`).join('')||'<div class="small muted">Абонементов нет</div>'}
+    </div></div>`).join('')||'<div class="card muted">Никого не найдено</div>';
+}
+function baseHTML(){
+  return `<h3>База клиентов</h3><div class="card"><input id="bsearch" placeholder="Поиск: имя или телефон" oninput="filterBase()" class="fw"></div><div id="baselist">${baseList('')}</div>`;
+}
+function filterBase(){ $('baselist').innerHTML=baseList($('bsearch').value.trim().toLowerCase()); }
+
+// ---------- подвал, факты и нижняя панель ----------
+const FACTS=[
+  "Марафонская дистанция 42,195 км закрепилась после Олимпийских игр в Лондоне в 1908 году.",
+  "Мышцы растут не во время тренировки, а во время отдыха. Сон 7–9 часов — лучшее восстановление.",
+  "В 2009 году Усэйн Болт разогнался примерно до 44,7 км/ч. Это один из самых быстрых результатов в истории спринта.",
+  "Потеря всего 2% жидкости от веса тела уже заметно снижает силу и выносливость.",
+  "Регулярные кардионагрузки со временем снижают пульс в покое: сердце работает экономнее.",
+  "Разминка 10–15 минут снижает риск травм: суставы и связки получают нужный прогрев.",
+  "Ходьба 10 000 шагов в день — хорошая база активности, которая поддерживает тонус весь день."
+];
+function footerHTML(){
+  const day=Math.floor(Date.now()/86400000);
+  return `<div class="foot"><div class="fact"><div class="fk">💡 Факт дня</div><div>${esc(FACTS[day%FACTS.length])}</div></div>
+    <div class="card"><div class="ct">Братан, звони по любым вопросам</div>
+    <div class="contacts"><a href="tel:+79134225590">📞 +7 913 422-55-90</a><a href="tel:+79134225519">📞 +7 913 422-55-19</a></div></div>
+    <div class="brand">IRON SOUL · Тренируйся сильнее</div></div>`;
+}
+function renderExtras(){
+  $('app').insertAdjacentHTML('beforeend', footerHTML());
+  const nav=$('bnav'); if(!nav) return;
+  if(!me){ nav.innerHTML=''; return; }
+  const tabs=me.role==='trainer'?[['trainer','🏋️','Тренер'],['base','👥','База']]:[];
+  const btns=tabs.concat([['client','👤','Мой']]).map(([v,i,t])=>`<button class="${view===v?'on':''}" onclick="setView('${v}')"><span>${i}</span>${t}</button>`).join('');
+  nav.innerHTML=btns+'<button onclick="toggleChat()"><span>💬</span>Чат</button><button onclick="toggleMenu()"><span>☰</span>Меню</button>';
+}
+const _baseRender=render;
+render=function(){ _baseRender(); renderExtras(); };
+
+// ---------- запуск ----------
+(async function boot(){
+  applyTheme();
+  try{ trainerExists=(await api('public')).trainerExists; }catch(e){}
+  if(token){
+    try{ const s=await api('state'); me=s.me; db=norm(s.state); lastSnap=JSON.stringify([s.me,s.state]); }
+    catch(e){ token=null; }
+  }
+  render(); startTimers();
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+})();
+</script>
+</body>
+</html>
